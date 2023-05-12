@@ -1,25 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 class Memory {
   static const operations = ['%', '/', 'x', '-', '+', '='];
 
-  String value = '0';
-  final buffer = [0.0, 0.0];
-  int bufferIndex = 0;
+  String _value = '0';
+  final _buffer = [0.0, 0.0];
+  int _bufferIndex = 0;
   String operation;
   bool wipeValeu = false;
-  String lastCommand;
+  String _lastCommand = '';
 
   Memory({
-    required this.value,
-    required this.bufferIndex,
-    required this.operation,
-    required this.wipeValeu,
-    required this.lastCommand,
+    
+    
+    this.operation = '',
+    this.wipeValeu =false
+    
   });
 
   void applycommand(String command) {
     if (isReplacingOperation(command)) {
-      operation = command;
+      _operation = command;
       return;
     }
     if (command == 'AC') {
@@ -29,71 +29,71 @@ class Memory {
     } else {
       addDigito(command);
     }
-    lastCommand = command;
+    _lastCommand = command;
   }
 
   isReplacingOperation(String command) {
-    return operations.contains(lastCommand) && operations.contains(command)
-    && lastCommand != '=' && command != '=';
+    return operations.contains(_lastCommand) && operations.contains(command)
+    && _lastCommand != '=' && command != '=';
   }
 
   setOperation(String newOperation) {
-    if (bufferIndex == 0) {
-      operation = newOperation;
-      bufferIndex = 1;
+    if (_bufferIndex == 0) {
+      _operation = newOperation;
+      _bufferIndex = 1;
     } else {
-      buffer[0] = calculate();
-      buffer[1] = 0.0;
-      value = buffer[0].toString();
-      value = value.endsWith('.0') ? value.split('')[0] : value;
+      _buffer[0] = calculate();
+      _buffer[1] = 0.0;
+      _value = _buffer[0].toString();
+      _value = _value.endsWith('.0') ? _value.split('')[0] : _value;
 
       bool isEqualsin = newOperation == '=';
-      operation = isEqualsin ? '' : newOperation;
-      bufferIndex = isEqualsin ? 0 : 1;
+      _operation = isEqualsin ? '' : newOperation;
+      _bufferIndex = isEqualsin ? 0 : 1;
     }
     wipeValeu = true;
   }
 
   addDigito(String digito) {
     final isDot = digito == '.';
-    final wipeValue = (value == '0' && !isDot) || wipeValeu;
+    final wipeValue = (_value == '0' && !isDot) || wipeValeu;
 
     if (isDot && valeu.contains('.') && !wipeValeu) {
       return;
     }
     final emptyValue = isDot ? '0' : '';
-    final currentValuer = wipeValue ? '' : value;
-    value = currentValuer + digito;
+    final currentValuer = wipeValue ? '' : _value;
+    _value = currentValuer + digito;
     wipeValeu = false;
-    buffer[bufferIndex] = double.tryParse(value) ?? 0;
+    _buffer[_bufferIndex] = double.tryParse(_value) ?? 0;
   }
 
   allCrear() {
-    value = '0';
-    buffer.setAll(0, [0.0, 0.0]);
-    operation = '';
-    bufferIndex = 0;
+    _value = '0';
+    _buffer.setAll(0, [0.0, 0.0]);
+    _operation = '';
+    _bufferIndex = 0;
     wipeValeu = false;
   }
 
   calculate() {
-    switch (operation) {
+    switch (_operation) {
       case '%':
-        return buffer[0] % buffer[1];
+        return _buffer[0] % _buffer[1];
       case '/':
-        return buffer[0] / buffer[1];
+        return _buffer[0] / _buffer[1];
       case 'x':
-        return buffer[0] * buffer[1];
+        return _buffer[0] * _buffer[1];
       case '-':
-        return buffer[0] - buffer[1];
+        return _buffer[0] - _buffer[1];
       case '+':
-        return buffer[0] + buffer[1];
+        return _buffer[0] + _buffer[1];
       default:
-        return buffer[0];
+        return _buffer[0];
     }
   }
 
   get valeu {
-    return value;
+    return _value;
   }
 }
